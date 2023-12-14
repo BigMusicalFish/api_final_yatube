@@ -1,20 +1,21 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
-from api.views import PostViewSet, CommentViewSet, GroupViewSet, FollowViewSet
+from django.urls import include, path
 
-app_name = 'api'
+from api.views import PostViewSet, CommentViewSet, GroupViewSet, FollowList
 
-v1_router = DefaultRouter()
 
-v1_router.register('posts', PostViewSet)
-v1_router.register('groups', GroupViewSet)
-v1_router.register('follow', FollowViewSet, basename='follow')
-v1_router.register(r'posts/(?P<post_id>\d+)/comments',
-                   CommentViewSet,
-                   basename='comment')
+router_api_v1 = SimpleRouter()
+
+router_api_v1.register('posts', PostViewSet, basename='posts')
+router_api_v1.register('groups', GroupViewSet, basename='groups')
+router_api_v1.register(
+    r'posts/(?P<post_id>\d+)/comments', CommentViewSet, basename='comments'
+)
 
 urlpatterns = [
+    path('v1/', include(router_api_v1.urls)),
+    path('v1/', include('djoser.urls')),
     path('v1/', include('djoser.urls.jwt')),
-    path('v1/', include(v1_router.urls), name='api_v1'),
+    path('v1/follow/', FollowList.as_view()),
 ]
