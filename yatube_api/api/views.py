@@ -12,6 +12,7 @@ from posts.models import Post, Group, Follow
 from api.serializers import (PostSerializer, CommentSerializer,
                              GroupSerializer, FollowSerializer)
 
+
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
