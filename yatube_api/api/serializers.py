@@ -8,7 +8,7 @@ from posts.models import Post, Comment, Group, Follow, User
 class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'title', 'slug', 'description')
         model = Group
 
 
@@ -24,11 +24,9 @@ class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         read_only=True, slug_field='username'
     )
-    post = serializers.PrimaryKeyRelatedField(
-        read_only=True,
-    )
 
     class Meta:
+        read_only_fields = ('post',)
         fields = '__all__'
         model = Comment
 
@@ -51,7 +49,7 @@ class FollowSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=Follow.objects.all(),
                 fields=('user', 'following'),
-                message=('Нельзя подписаться на автора')
+                message=('Вы уже подписаны на данного автора')
             ),
         )
 
